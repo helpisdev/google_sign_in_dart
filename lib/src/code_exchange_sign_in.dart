@@ -1,3 +1,9 @@
+// Copyright (C) Hellenic Progressive Internet Services, Inc.
+// All Rights Reserved. 2022.
+// Unauthorized copying of this file, via any medium is strictly prohibited.
+// Proprietary and confidential.
+// Written by Elias Kapareliotis <helpis@tutamail.com>.
+
 // File created by
 // Lung Razvan <long1eu>
 // on 02/03/2020
@@ -10,12 +16,12 @@ part of '../google_sign_in_dartio.dart';
 /// Once the auth code comes back it make a post to [exchangeEndpoint] for
 /// to obtain the access and refresh tokens.
 Future<Map<String, dynamic>> _codeExchangeSignIn({
-  required String clientId,
-  required String exchangeEndpoint,
-  required String scope,
-  required UrlPresenter presenter,
-  String? hostedDomains,
-  String? uid,
+  required final String clientId,
+  required final String exchangeEndpoint,
+  required final String scope,
+  required final UrlPresenter presenter,
+  final String? hostedDomains,
+  final String? uid,
 }) async {
   final Completer<Map<String, dynamic>> completer =
       Completer<Map<String, dynamic>>();
@@ -30,7 +36,7 @@ Future<Map<String, dynamic>> _codeExchangeSignIn({
   final int port = server.port;
   final String redirectUrl = 'http://${address.host}:$port';
 
-  server.listen((HttpRequest request) async {
+  server.listen((final HttpRequest request) async {
     final Uri uri = request.requestedUri;
 
     if (uri.path == '/') {
@@ -80,12 +86,12 @@ Future<Map<String, dynamic>> _codeExchangeSignIn({
 }
 
 Future<Map<String, dynamic>> _validateAndExchangeCodeResponse({
-  required HttpRequest request,
-  required String state,
-  required String exchangeEndpoint,
-  required String redirectUrl,
-  required String clientId,
-  required String codeVerifier,
+  required final HttpRequest request,
+  required final String state,
+  required final String exchangeEndpoint,
+  required final String redirectUrl,
+  required final String clientId,
+  required final String codeVerifier,
 }) {
   final Map<String, String> authResponse = request.requestedUri.queryParameters;
   final String? returnedState = authResponse['state'];
@@ -109,22 +115,27 @@ Future<Map<String, dynamic>> _validateAndExchangeCodeResponse({
       code: '$code',
       codeVerifier: codeVerifier,
     )
-        .then((Map<String, dynamic> value) =>
-            _sendData(request, _successHtml).then((_) => value))
+        .then(
+          (final Map<String, dynamic> value) =>
+              _sendData(request, _successHtml).then((final _) => value),
+        )
         .catchError(
-            (dynamic error, StackTrace stackTrace) =>
-                _sendErrorAndThrow<Map<String, dynamic>>(
-                    request, error.message),
-            test: (dynamic error) => error is StateError);
+          (final error, final StackTrace stackTrace) =>
+              _sendErrorAndThrow<Map<String, dynamic>>(
+            request,
+            error.message,
+          ),
+          test: (final error) => error is StateError,
+        );
   }
 }
 
 Future<Map<String, dynamic>> _exchangeCode({
-  required String exchangeEndpoint,
-  required String redirectUrl,
-  required String clientId,
-  required String code,
-  required String codeVerifier,
+  required final String exchangeEndpoint,
+  required final String redirectUrl,
+  required final String clientId,
+  required final String code,
+  required final String codeVerifier,
 }) async {
   final Response response = await post(
     Uri.parse(exchangeEndpoint),

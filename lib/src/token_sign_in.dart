@@ -1,3 +1,9 @@
+// Copyright (C) Hellenic Progressive Internet Services, Inc.
+// All Rights Reserved. 2022.
+// Unauthorized copying of this file, via any medium is strictly prohibited.
+// Proprietary and confidential.
+// Written by Elias Kapareliotis <helpis@tutamail.com>.
+
 // File created by
 // Lung Razvan <long1eu>
 // on 02/03/2020
@@ -10,14 +16,14 @@ part of '../google_sign_in_dartio.dart';
 /// Using this implementation will not provide a refresh token, that means that
 /// the user will need to login again after the access token expires (~1 hour)
 Future<Map<String, dynamic>> _tokenSignIn({
-  required String clientId,
-  required String scope,
-  required UrlPresenter presenter,
-  String? hostedDomains,
-  String? uid,
+  required final String clientId,
+  required final String scope,
+  required final UrlPresenter presenter,
+  final String? hostedDomains,
+  final String? uid,
   int? port,
-  String? successUrl,
-  String? failUrl,
+  final String? successUrl,
+  final String? failUrl,
 }) async {
   final Completer<Map<String, dynamic>> completer =
       Completer<Map<String, dynamic>>();
@@ -31,7 +37,7 @@ Future<Map<String, dynamic>> _tokenSignIn({
   final InternetAddress address = InternetAddress.loopbackIPv4;
   final HttpServer server = await HttpServer.bind(address, port ?? 0);
   port = port ?? server.port;
-  server.listen((HttpRequest request) async {
+  server.listen((final HttpRequest request) async {
     final Uri uri = request.requestedUri;
 
     if (uri.path == '/') {
@@ -39,7 +45,11 @@ Future<Map<String, dynamic>> _tokenSignIn({
     } else if (uri.path == '/response') {
       if (successUrl != null && failUrl != null) {
         await _validateTokenWithCustomScreen(
-                request, state, successUrl, failUrl)
+          request,
+          state,
+          successUrl,
+          failUrl,
+        )
             .then(completer.complete)
             .catchError(completer.completeError)
             .whenComplete(server.close);
@@ -82,7 +92,9 @@ Future<Map<String, dynamic>> _tokenSignIn({
 }
 
 Future<Map<String, String>> _validateTokenResponse(
-    HttpRequest request, String state) async {
+  final HttpRequest request,
+  final String state,
+) async {
   final Map<String, String> authResponse = request.requestedUri.queryParameters;
   final String? returnedState = authResponse['state'];
   final String? accessToken = authResponse['access_token'];
@@ -107,8 +119,12 @@ Future<Map<String, String>> _validateTokenResponse(
   }
 }
 
-Future<Map<String, String>> _validateTokenWithCustomScreen(HttpRequest request,
-    String state, String successUrl, String failUrl) async {
+Future<Map<String, String>> _validateTokenWithCustomScreen(
+  final HttpRequest request,
+  final String state,
+  final String successUrl,
+  final String failUrl,
+) async {
   final Map<String, String> authResponse = request.requestedUri.queryParameters;
   final String? returnedState = authResponse['state'];
   final String? accessToken = authResponse['access_token'];
@@ -121,13 +137,13 @@ Future<Map<String, String>> _validateTokenWithCustomScreen(HttpRequest request,
     request.response
       ..statusCode = 500
       ..write('');
-    request.response.redirect(Uri.parse(failUrl));
+    await request.response.redirect(Uri.parse(failUrl));
     await launch(failUrl);
   } else {
     request.response
       ..statusCode = 200
       ..write('');
-    request.response.redirect(Uri.parse(successUrl));
+    await request.response.redirect(Uri.parse(successUrl));
   }
   await request.response.close();
   return authResponse;

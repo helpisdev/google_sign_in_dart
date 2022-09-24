@@ -1,11 +1,20 @@
+// Copyright (C) Hellenic Progressive Internet Services, Inc.
+// All Rights Reserved. 2022.
+// Unauthorized copying of this file, via any medium is strictly prohibited.
+// Proprietary and confidential.
+// Written by Elias Kapareliotis <helpis@tutamail.com>.
+
 // File created by
 // Lung Razvan <long1eu>
 // on 03/03/2020
 
 part of '../google_sign_in_dartio.dart';
 
-Future<void> _sendData(HttpRequest request, Object data,
-    [String contentType = 'text/html']) async {
+Future<void> _sendData(
+  final HttpRequest request,
+  final Object data, [
+  final String contentType = 'text/html',
+]) async {
   request.response
     ..statusCode = 200
     ..headers.set('content-type', contentType)
@@ -13,7 +22,10 @@ Future<void> _sendData(HttpRequest request, Object data,
   await request.response.close();
 }
 
-Future<T> _sendErrorAndThrow<T>(HttpRequest request, String message) async {
+Future<T> _sendErrorAndThrow<T>(
+  final HttpRequest request,
+  final String message,
+) async {
   request.response
     ..statusCode = 500
     ..headers.set('content-type', 'text/plain')
@@ -24,9 +36,11 @@ Future<T> _sendErrorAndThrow<T>(HttpRequest request, String message) async {
 }
 
 final Uint8List _imageData = base64Decode(
-    'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACY0lEQVR4AcWTA6xcQRhGn20rqm2bMRs3rM2wtm0zqhHUtqI6qm0s3ur+/Wa9/+Ji9qVJTjA652ISiCg2exP6gyZ8PF5oCZgOboHk/xVwEBCYGmGuFehS1wHPvQEW0JDNLQfH4xrABNnACcjLdZDknUsC74ELNKirgE6AGJO8cwODxraIsUgod5qmyASMjBBgAvXB/qAxCygJ23+vSROwXSZgEyCObVPKI8e2ZAsbn8PkzcEn8Eom4EakgN+Lssi0IoOPfwWZXnkb8AUQUOxXWuTqDRDyRPAnwtPT99m59GNOLim7EnnEKAjbgW+AfDivN+9sJKABIM6vhdnuAIFlbVro/KGstxD+BBSM62azoUYCBnF57cZUv1zwc3420R6fHG//TiMhDAM3YZWRgHnBciESQohDEJ8ET87lnNNGAk4GB1jXp4XJBeatRWpywVsjAS99cmVPIv2clxMm/7OhlJTbjYVAFdyEfM0BkBaEPP3atHD5RsjvqMuDbkI3PQG9/U+/O5F+zA19+r+bSonU5fwmjNQTMNEXYFmdHirfUqZX7rsJa/UE7ALk2oWnn5MTkG+F/K52KeO8noAHgMwr0wPybeUycsFHTQEQpwCra2cSfZ/jkZt2yMl9OK60KNIS0AyQaXmGR76rQkbKb0JPLQGDnduT3HLzbkk5w3Wr2RgtAcv/Lssk895KeSlDudtko2qAfUvKbdPe6rjL8fRku9jysmqAaU+N03q2lVgsNsVLTOJM8EU1AIv6gCuAJEK4WHAF9FEJkAzRIeYB0iF6xTzAaIhhMQ8wHKJTLB/AQ5hYN/8Am8FSntayj78AAAAASUVORK5CYII=');
+  'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACY0lEQVR4AcWTA6xcQRhGn20rqm2bMRs3rM2wtm0zqhHUtqI6qm0s3ur+/Wa9/+Ji9qVJTjA652ISiCg2exP6gyZ8PF5oCZgOboHk/xVwEBCYGmGuFehS1wHPvQEW0JDNLQfH4xrABNnACcjLdZDknUsC74ELNKirgE6AGJO8cwODxraIsUgod5qmyASMjBBgAvXB/qAxCygJ23+vSROwXSZgEyCObVPKI8e2ZAsbn8PkzcEn8Eom4EakgN+Lssi0IoOPfwWZXnkb8AUQUOxXWuTqDRDyRPAnwtPT99m59GNOLim7EnnEKAjbgW+AfDivN+9sJKABIM6vhdnuAIFlbVro/KGstxD+BBSM62azoUYCBnF57cZUv1zwc3420R6fHG//TiMhDAM3YZWRgHnBciESQohDEJ8ET87lnNNGAk4GB1jXp4XJBeatRWpywVsjAS99cmVPIv2clxMm/7OhlJTbjYVAFdyEfM0BkBaEPP3atHD5RsjvqMuDbkI3PQG9/U+/O5F+zA19+r+bSonU5fwmjNQTMNEXYFmdHirfUqZX7rsJa/UE7ALk2oWnn5MTkG+F/K52KeO8noAHgMwr0wPybeUycsFHTQEQpwCra2cSfZ/jkZt2yMl9OK60KNIS0AyQaXmGR76rQkbKb0JPLQGDnduT3HLzbkk5w3Wr2RgtAcv/Lssk895KeSlDudtko2qAfUvKbdPe6rjL8fRku9jysmqAaU+N03q2lVgsNsVLTOJM8EU1AIv6gCuAJEK4WHAF9FEJkAzRIeYB0iF6xTzAaIhhMQ8wHKJTLB/AQ5hYN/8Am8FSntayj78AAAAASUVORK5CYII=',
+);
 
-const String _verifyQueryHtml = '''<!DOCTYPE html>
+const String _verifyQueryHtml = '''
+<!DOCTYPE html>
 <html class="mdl-js" lang="en">
 <head>
     <title>Check</title>
@@ -61,7 +75,8 @@ const String _verifyQueryHtml = '''<!DOCTYPE html>
 </body>
 </html>''';
 
-const String _verifyFragmentHtml = '''<!DOCTYPE html>
+const String _verifyFragmentHtml = '''
+<!DOCTYPE html>
 <html class="mdl-js" lang="en">
 <head>
     <title>Check</title>
@@ -96,7 +111,8 @@ const String _verifyFragmentHtml = '''<!DOCTYPE html>
 </body>
 </html>''';
 
-const String _successHtml = '''<!DOCTYPE html>
+const String _successHtml = '''
+<!DOCTYPE html>
 <html class="mdl-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">

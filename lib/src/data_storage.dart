@@ -1,3 +1,9 @@
+// Copyright (C) Hellenic Progressive Internet Services, Inc.
+// All Rights Reserved. 2022.
+// Unauthorized copying of this file, via any medium is strictly prohibited.
+// Proprietary and confidential.
+// Written by Elias Kapareliotis <helpis@tutamail.com>.
+
 // File created by
 // Lung Razvan <long1eu>
 // on 24/11/2019
@@ -7,8 +13,10 @@ part of '../google_sign_in_dartio.dart';
 /// Helper class for persisting tokens between sessions
 class DataStorage {
   /// Create an instance that will persist the values using [store].
-  const DataStorage._({required Store store, required String clientId})
-      : _store = store,
+  const DataStorage._({
+    required final Store store,
+    required final String clientId,
+  })  : _store = store,
         _clientId = clientId;
 
   final Store _store;
@@ -35,13 +43,13 @@ class DataStorage {
   /// information about the user.
   String? get idToken => _store.get(_getKey(_kIdTokenKey));
 
-  set idToken(String? value) => _setValue(_kIdTokenKey, value);
+  set idToken(final String? value) => _setValue(_kIdTokenKey, value);
 
   /// Saves the token that your application sends to authorize a Google API
   /// request.
   String? get accessToken => _store.get(_getKey(_kAccessTokenKey));
 
-  set accessToken(String? value) => _setValue(_kAccessTokenKey, value);
+  set accessToken(final String? value) => _setValue(_kAccessTokenKey, value);
 
   /// Saves the remaining lifetime of the access token.
   DateTime? get expiresAt {
@@ -49,7 +57,7 @@ class DataStorage {
     return date != null ? DateTime.parse(date) : null;
   }
 
-  set expiresAt(DateTime? value) {
+  set expiresAt(final DateTime? value) {
     _setValue(_kExpirationAtKey, value?.toIso8601String());
   }
 
@@ -60,19 +68,21 @@ class DataStorage {
   /// user revokes access.
   String? get refreshToken => _store.get(_getKey(_kRefreshTokenKey));
 
-  set refreshToken(String? value) => _setValue(_kRefreshTokenKey, value);
+  set refreshToken(final String? value) => _setValue(_kRefreshTokenKey, value);
 
   /// Retrieve the authentication data after sign in.
   platform.GoogleSignInTokenData? get tokenData {
     if (idToken != null || accessToken != null) {
       return platform.GoogleSignInTokenData(
-          idToken: idToken, accessToken: accessToken);
+        idToken: idToken,
+        accessToken: accessToken,
+      );
     }
 
     return null;
   }
 
-  set tokenData(platform.GoogleSignInTokenData? data) {
+  set tokenData(final platform.GoogleSignInTokenData? data) {
     idToken = data?.idToken;
     accessToken = data?.accessToken;
   }
@@ -89,12 +99,12 @@ class DataStorage {
     return value.split(' ');
   }
 
-  set scopes(List<String> value) {
+  set scopes(final List<String> value) {
     _setValue(_kScopeKey, value.join(' '));
   }
 
   /// Convenience method to update all fields persisted by this object
-  void saveResult(Map<String, dynamic> result) {
+  void saveResult(final Map<String, dynamic> result) {
     refreshToken = result['refresh_token'] ?? refreshToken;
     idToken = result['id_token'] ?? idToken;
     accessToken = result['access_token'] ?? accessToken;
@@ -103,7 +113,7 @@ class DataStorage {
         .add(Duration(seconds: int.parse('${result['expires_in']}')));
   }
 
-  void saveUserProfile(Map<String, dynamic> result) {
+  void saveUserProfile(final Map<String, dynamic> result) {
     _setValue(_kIdKey, result['sub']);
     _setValue(_kNameKey, result['name']);
     _setValue(_kEmailKey, result['email']);
@@ -153,7 +163,7 @@ class DataStorage {
     return null;
   }
 
-  void _setValue(String key, String? value) {
+  void _setValue(final String key, final String? value) {
     if (value == null) {
       _store.remove(_getKey(key));
     } else {
@@ -161,19 +171,19 @@ class DataStorage {
     }
   }
 
-  String _getKey(String field) => 'DataStorage___$_clientId\__$field';
+  String _getKey(final String field) => 'DataStorage___${_clientId}__$field';
 }
 
 /// Interface for persisting key/value pairs
 abstract class Store {
   /// Persist the [value] at [key].
-  void set(String key, String value);
+  void set(final String key, final String value);
 
   /// Remove the value at specified [key] if exists.
-  void remove(String key);
+  void remove(final String key);
 
   /// Get the value at specified [key] or nul if it doesn't exists.
-  String? get(String key);
+  String? get(final String key);
 
   /// Remove all the values store.
   void clearAll();
@@ -185,17 +195,15 @@ class _SharedPreferencesStore extends Store {
   final SharedPreferences _preferences;
 
   @override
-  String? get(String key) {
-    return _preferences.getString(key);
-  }
+  String? get(final String key) => _preferences.getString(key);
 
   @override
-  void remove(String key) {
+  void remove(final String key) {
     _preferences.remove(key);
   }
 
   @override
-  void set(String key, String value) {
+  void set(final String key, final String value) {
     _preferences.setString(key, value);
   }
 

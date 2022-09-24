@@ -1,3 +1,9 @@
+// Copyright (C) Hellenic Progressive Internet Services, Inc.
+// All Rights Reserved. 2022.
+// Unauthorized copying of this file, via any medium is strictly prohibited.
+// Proprietary and confidential.
+// Written by Elias Kapareliotis <helpis@tutamail.com>.
+
 // File created by
 // Lung Razvan <long1eu>
 // on 02/03/2020
@@ -12,8 +18,10 @@ const String _charset =
 ///
 /// See "Proof Key for Code Exchange by OAuth Public Clients (RFC 7636)
 /// <https://tools.ietf.org/html/rfc7636>"
-String _generateSecureRandomString(
-    [Random? entropySource, int entropyBytes = 64]) {
+String _generateSecureRandomString([
+  Random? entropySource,
+  final int entropyBytes = 64,
+]) {
   entropySource ??= Random.secure();
 
   final StringBuffer buffer = StringBuffer();
@@ -29,8 +37,6 @@ String _generateSecureRandomString(
 
 /// Produces a code challenge as a Base64URL (with no padding) encoded SHA256
 /// hash of the code verifier.
-String _deriveCodeVerifierChallenge(String codeVerifier) {
-  return base64Url
-      .encode(sha256.convert(ascii.encode(codeVerifier)).bytes)
-      .replaceAll('=', '');
-}
+String _deriveCodeVerifierChallenge(final String codeVerifier) => base64Url
+    .encode(sha256.convert(ascii.encode(codeVerifier)).bytes)
+    .replaceAll('=', '');
